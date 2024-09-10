@@ -5,7 +5,6 @@ mongoose.connect("mongodb+srv://pushkardps8:*%40@cluster0.fid6d.mongodb.net/pays
 const userSchema = mongoose.Schema({
     username: {
         type: String,
-        required: true,
         unique: true,
         trim: true,
         lowercase: true,
@@ -14,18 +13,15 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
         minLength: 6
     },
     firstName: {
         type: String,
-        required: true,
         trim: true,
         maxLength: 50
     },
     lastName: {
         type: String,
-        required: true,
         trim: true,
         maxLength: 50
     }

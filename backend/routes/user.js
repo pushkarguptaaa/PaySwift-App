@@ -3,6 +3,7 @@ const zod = require("zod")
 const jwt = require("jsonwebtoken")
 const { User } = require("../db")
 const { JWT_SECRET } = require("../config")
+const { userMiddleware } = require("../middleware/userMiddleware")
 const router = express.Router()
 
 const signupBody = zod.object({
@@ -33,16 +34,17 @@ router.post("/signup", async (req, res) => {
         lastName: req.body.lastName
     })
 
-    const userId = user._id
+    jwt.sign({
+        userId: user._id}, JWT_SECRET, (err, token) => {
+       if (err) {
+           return res.status(500).json({ error: err.message })
+           }
 
-    const token = jwt.sign({
-        userId
-    }, JWT_SECRET)
-
-    res.status(200).json({
-        message: "User created successfully",
-        token: token
-    })
+       res.status(200).json({
+           message: "User created successfully",
+           token: token
+       })
+   })
 
 })
 
@@ -53,26 +55,58 @@ router.post("/signin" , async (req, res) => {
         message: "Email already taken / Incorrect inputs"
     })
 
-    const user = User.findOne({
+    const user = await User.findOne({
         username: req.body.username,
         password: req.body.password
     })
 
     if(user){
-        const token = jwt.sign({
-            userId: user._id
-        }, JWT_SECRET)
+        jwt.sign({
+            userId: user._id}, JWT_SECRET, (err, token) => {
+            if (err) {
+                return res.status(500).json({ error: err.message })
+                }
 
-        res.status(200).json({
-            token: token
+            res.status(200).json({
+                token: token
+            })
+        })
+    }
+    else{
+        res.status(411).json({
+            message: "Error while logging in"
+        })
+    }
+    
+})
+
+const updatedBody = zod.object({
+    firstName: zod.string().optional(),
+    password: zod.string().min(6).optional(),
+    lastName: zod.string().optional()
+})
+
+router.put("/", userMiddleware, async (req, res) => {
+    const {success} = updatedBody.safeParse(req.body)
+    if(!success)
+        res.status(411).json({
+            message: "Error while updating information"
         })
 
-        return
+    try{
+        await User.updateOne({
+            _id: req.userId
+        },req.body)
+    } 
+    catch(e){
+        res.json({e})
     }
+    
 
-    res.status(411).json({
-        message: "Error while logging in"
+    res.json({
+        message: "Updated successfully"
     })
+
 })
 
 module.exports = router
