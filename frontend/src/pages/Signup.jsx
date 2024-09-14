@@ -9,19 +9,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const Signup = () => {
-    // const [formData, setFormData] = useState({
-    //     firstname: "",
-    //     lastname: "",
-    //     email: "",
-    //     password: "",
-    //   });
 
       const [firstName, setFirstName] = useState("")
       const [lastName, setLastName] = useState("")
       const [username, setUsername] = useState("")
       const [password, setPassword] = useState("")
     
-      const [showError, setShowError] = useState(false);
     
       const navigate = useNavigate();
 
@@ -60,24 +53,21 @@ export const Signup = () => {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
               />
-              <Button label={"Sign up"} onClick={() => {
-                const res = axios.post("http://localhost:3000/api/v1/user/signup",{
+              <Button label={"Sign up"} onClick={async () => {
+                const res = await axios.post("http://localhost:3000/api/v1/user/signup",{
                     username,
                     firstName,
                     lastName,
                     password
                 })
+                localStorage.setItem("token", res.data.token)
+                navigate("/dashboard")
               }} />
               <BottomWarning
                 label={"Already have an account? "}
                 to={"/signin"}
                 buttonText={"Sign in"}
               />
-              {showError && (
-                <div className="font-light text-red-700 text-xs mt-2">
-                  Signup Failed!
-                </div>
-              )}
             </div>
           </div>
         </div>

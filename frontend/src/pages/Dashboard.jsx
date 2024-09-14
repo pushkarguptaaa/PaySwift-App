@@ -8,23 +8,14 @@ import { Users } from "../components/Users";
 
 
 export const Dashboard = () => {
-    // const [balance, setBalance] = useState("");
-    // const token = useRecoilValue(tokenAtom);
-    // const user = useRecoilValue(userAtom);
-  
-    // useEffect(() => {
-    //   const fetchBalance = async () => {
-    //     const userBalance = await getBalance(token);
-    //     setBalance(userBalance);
-    //   };
-    //   fetchBalance();
-    // }, [token]);
   
     return (
       <div>
-        <Appbar user={"Pushkar Gupta"} />
-        <Balance balance= {"5000"} />
-        <Users user={"Pushkar Gupta"}/>
+        <Appbar />
+        <div className="m-8">
+            <Balance />
+            <Users />
+        </div>
       </div>
     );
 }

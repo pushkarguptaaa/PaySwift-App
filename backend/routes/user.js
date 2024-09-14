@@ -54,8 +54,13 @@ router.post("/signup", async (req, res) => {
 
 })
 
+const signinBody = zod.object({
+    username: zod.string().email(),
+	password: zod.string().min(6)
+})
+
 router.post("/signin" , async (req, res) => {
-    const {success} = signupBody.safeParse(req.body)
+    const {success} = signinBody.safeParse(req.body)
 
     if(!success) res.status(414).json({
         message: "Email already taken / Incorrect inputs"
@@ -115,7 +120,7 @@ router.put("/", userMiddleware, async (req, res) => {
 
 })
 
-router.get("/bulk", async (req, res) => {
+router.get("/bulk", userMiddleware, async (req, res) => {
     const filter = req.query.filter || ""
 
     const users = await User.find({

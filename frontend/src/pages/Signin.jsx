@@ -5,45 +5,16 @@ import InputBox from "../components/InputBox";
 import Button from "../components/Button";
 import BottomWarning from "../components/BottomWarning";
 import { useNavigate } from "react-router-dom";
-// import { signin } from "../services/operations/authApi";
-// import { useSetRecoilState } from "recoil";
-// import { tokenAtom } from "../store/atoms";
+import axios from "axios";
+
 
 export const Signin = () => {
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-      });
     
       const navigate = useNavigate();
-    //   const setToken = useSetRecoilState(tokenAtom);
-      const [showError, setShowError] = useState(false);
-    
-      function changeHandler(event) {
-        setFormData((prev) => ({
-          ...prev,
-          [event.target.name]: event.target.value,
-        }));
-      }
-    
-    //   async function hanldeClick() {
-    //     const token = await signin(formData.email, formData.password);
-    //     if (token) {
-    //       setToken(token);
-    //       setFormData({
-    //         email: "",
-    //         password: "",
-    //       });
-    //       setShowError(false);
-    //       navigate("/dashboard");
-    //     } else {
-    //       setShowError(true);
-    //     }
-    //   }
 
-      const handleClick = () => {
+      const [username, setUsername] = useState("")
+      const [password, setPassword] = useState("")
 
-      }
 
       return (
         <div className="h-screen bg-slate-300 flex justify-center items-center">
@@ -54,28 +25,31 @@ export const Signin = () => {
               <InputBox
                 label={"Email"}
                 placeholder={"johndoe@example.com"}
-                onChange={changeHandler}
+                onChange={e => setUsername(e.target.value)}
                 name="email"
-                value={formData.email}
+                value={username}
               />
               <InputBox
                 label={"Password"}
                 placeholder={"123456"}
-                onChange={changeHandler}
+                onChange={e => setPassword(e.target.value)}
                 name="password"
-                value={formData.password}
+                value={password}
               />
-              <Button label={"Sign in"} onClick={handleClick} />
+              <Button label={"Sign in"} onClick={async() => {
+                const res = await axios.post("http://localhost:3000/api/v1/user/signin",{
+                    username,
+                    password
+                })
+                localStorage.setItem("token", res.data.token)
+                navigate("/dashboard")
+              }} />
               <BottomWarning
                 label={"Don't have an account? "}
                 to={"/signup"}
                 buttonText={"Sign up"}
               />
-              {showError && (
-                <div className="font-light text-red-700 text-xs mt-2">
-                  Signin Failed!
-                </div>
-              )}
+            
             </div>
           </div>
         </div>

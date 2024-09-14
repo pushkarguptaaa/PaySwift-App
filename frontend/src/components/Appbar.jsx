@@ -1,26 +1,18 @@
-import React, { useState } from "react";
-// import { AiOutlineCaretDown } from "react-icons/ai";
-// import Dropdown from "./Dropdown";
+export const Appbar = () => {
 
-export const Appbar = ({ user }) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="w-full relative flex justify-between items-center shadow px-4 sm:px-14">
-      <div className="text-xl sm:text-2xl font-bold ">Payments App</div>
-      <div
-        className="flex justify-between items-center relative"
-        onClick={() => setOpen((prev) => !prev)}
-      >
-        <div>Hello, {user}</div>
-        <div className="rounded-full h-12 w-12 flex justify-center items-center bg-slate-300 ml-2 my-1">
-          <img
-            src={`https://api.dicebear.com/9.x/initials/svg?seed=${user}`}
-            className="h-[90%] w-[90%] rounded-full"
-          />
+    return <div className="shadow h-14 flex justify-between">
+        <div className="flex flex-col justify-center h-full ml-4">
+            PaySwift App
         </div>
-        {/* <AiOutlineCaretDown className="text-sm text-slate-300" />
-        {open && <Dropdown />} */}
-      </div>
+        <div className="flex">
+            <div className="flex flex-col justify-center h-full mr-4">
+                Hello
+            </div>
+            <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
+                <div className="flex flex-col justify-center h-full text-xl">
+                    PG
+                </div>
+            </div>
+        </div>
     </div>
-  );
-};
+}
